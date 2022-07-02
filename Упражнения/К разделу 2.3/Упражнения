@@ -1,0 +1,136 @@
+# Упражнения к разделу 2.3
+
+## Упражнение 2.3.1
+
+> Постройте схему синтаксически управляемой трансляции, которая транслирует арифметические выражения из инфиксной записи в префиксную, в которой оператор находится перед операндами; например, −xy представляет собой префиксную запись для x − y. Изобразите аннотированное дерево разбора для входных строк 9-5+2 и 9-5*2.
+
+| Продукция | Семантическое правило |
+| --------- | --------------------- |
+| expr -> expr_1 + term | expr.t = '+' \|\| expr_1.t \|\| term.t |
+| expr -> expr - term | expr.t = '-' \|\| expr_1.t \|\| term.t |
+| expr -> term | expr.t = term.t |
+| term -> term_1 * factor | term.t = '*' \|\| term_1.t \|\| factor.t |
+| term -> term_1 / factor | term.t = '/' \|\| term_1.t \|\| factor.t |
+| term -> factor | term.t = factor.t |
+| factor -> 0 | factor.t = '0' |
+| factor -> 1 | factor.t = '1' |
+| ... | ... |
+| factor -> 9 | factor.t = '9' |
+| factor -> ( expr ) | factor.t = expr.t |
+
+
+## Упражнение 2.3.2
+
+> Постройте схему синтаксически управляемой трансляции, которая транслирует арифметические выражения из постфиксной записи в инфиксную. Изобразите аннотированное дерево разбора для входных строк 95-2* и 952*-.
+
+| Продукция | Семантическое правило |
+| --------- | --------------------- |
+| expr -> expr_1 expr_2 operator | expr.t = '(' \|\| expr_1.t \|\| ')' \|\| operator.t \|\| expr_2.t |
+| expr -> factor | expr.t = factor.t |
+| factor -> 0 | factor.t = '0' |
+| factor -> 1 | factor.t = '1' |
+| ... | ... |
+| factor -> 9 | factor.t = '9' |
+| operator -> + | operator.t = '+' |
+| operator -> - | operator.t = '-' |
+| operator -> * | operator.t = '*' |
+| operator -> / | operator.t = '/' |
+
+
+## Упражнение 2.3.3
+
+> Постройте схему синтаксически управляемой трансляции, которая транслирует целые числа в числа, записанные римскими цифрами
+
+| Продукция | Семантическое правило |
+| --------- | --------------------- |
+| expr -> thousand hundred ten digit | expr.t = thousand.t \|\| hundred.t \|\| ten.t \|\| digit.t |
+| digit -> 0 \| e | digit.t = '' |
+| digit -> 1 | digit.t = 'I' |
+| digit -> 2 | digit.t = 'II' |
+| digit -> 3 | digit.t = 'III' |
+| digit -> 4 | digit.t = 'IV' |
+| digit -> 5 | digit.t = 'V' |
+| digit -> 6 | digit.t = 'VI' |
+| digit -> 7 | digit.t = 'VII' |
+| digit -> 8 | digit.t = 'VIII' |
+| digit -> 9 | digit.t = 'IX' |
+| ten -> 0 \| e | ten.t = '' |
+| ten -> 1 | ten.t = 'X' |
+| ten -> 2 | ten.t = 'XX' |
+| ten -> 3 | ten.t = 'XXX' |
+| ten -> 4 | ten.t = 'XL' |
+| ten -> 5 | ten.t = 'L' |
+| ten -> 6 | ten.t = 'LX' |
+| ten -> 7 | ten.t = 'LXX' |
+| ten -> 8 | ten.t = 'LXXX' |
+| ten -> 9 | ten.t = 'XC' |
+| hundred -> 0 \| e | hundred.t = '' |
+| hundred -> 1 | hundred.t = 'C' |
+| hundred -> 2 | hundred.t = 'CC' |
+| hundred -> 3 | hundred.t = 'CCC' |
+| hundred -> 4 | hundred.t = 'CD' |
+| hundred -> 5 | hundred.t = 'D' |
+| hundred -> 6 | hundred.t = 'DC' |
+| hundred -> 7 | hundred.t = 'DCC' |
+| hundred -> 8 | hundred.t = 'DCCC' |
+| hundred -> 9 | hundred.t = 'CM' |
+| thousand -> 0 \| e | thousand.t = '' |
+| thousand -> 1 | thousand.t = 'M' |
+| thousand -> 2 | thousand.t = 'MM' |
+| thousand -> 3 | thousand.t = 'MMM' |
+
+## Упражнение 2.3.4
+
+> Постройте схему синтаксически управляемой трансляции, которая транслирует числа, записанные римскими цифрами, в обычную десятичную
+запись.
+
+Функция `int` для пустой строки возвращает ноль.
+
+| Продукция | Семантическое правило |
+| --------- | --------------------- |
+| romanNum -> thousand hundred ten digit
+| thousand -> M | thousand.t = '1' |
+| thousand -> MM | thousand.t = '2'|
+| thousand -> MMM | thousand.t = '3' |
+| thousand -> e | thousand.t = '' |
+| hundred -> smallHundred | hundred.t = smallHundred.t |
+| hundred -> CD | hundred.t = '4' |
+| hundred -> D smallHundred | hundred.t = str(5 + int(smallHundred.t)) |
+| hundred -> CM | hundred.t = '9' |
+| smallHundred -> C | smallHundred.t = '1' |
+| smallHundred -> CC | smallHundred.t = '2' |
+| smallHundred -> CCC | smallHundred.t = '3' |
+| smallHundred -> e | smallHundred.t = '' |
+| ten -> smallTen | ten.t = smallTen.t |
+| ten -> XL | ten.t = '4' |
+| ten -> L smallTen | ten.t = str(5 + int(smallTen.t) |
+| ten -> XC | ten.t = '9' |
+| smallTen -> X | smallTen.t = '1' |
+| smallTen -> XX | smallTen.t = '2' |
+| smallTen -> XXX | smallTen.t = '3' |
+| smallTen -> e | smallTen.t = '' |
+| digit -> smallDigit | digit.t = smallDigit.t |
+| digit -> IV | digit.t = '4' |
+| digit -> V smallDigit | digit.t = str(5 + int(smallDigit.t) |
+| digit -> IX | digit.t = '9' |
+| smallDigit -> I | smallDigit.t = '1' |
+| smallDigit -> II | smallDigit.t = '2' |
+| smallDigit -> III | smallDigit.t = '3' |
+| smallDigit -> e | smallDigit.t = '' |
+
+## Упражнение 2.3.5
+
+> Постройте схему синтаксически управляемой трансляции, которая транслирует постфиксные арифметические выражения в эквивалентные префиксные арифметические выражения
+
+| Продукция | Семантическое правило |
+| --------- | --------------------- |
+| expr -> expr_1 expr_2 operator | expr.t = operator.t \|\| expr_1.t \|\| expr_2.t |
+| expr -> factor | expr.t = factor.t |
+| factor -> 0 | factor.t = '0' |
+| factor -> 1 | factor.t = '1' |
+| ... | ... |
+| factor -> 9 | factor.t = '9' |
+| operator -> + | operator.t = '+' |
+| operator -> - | operator.t = '-' |
+| operator -> * | operator.t = '*' |
+| operator -> / | operator.t = '/' |
