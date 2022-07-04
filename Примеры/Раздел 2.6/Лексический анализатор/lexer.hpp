@@ -38,13 +38,20 @@ public:
             else break;
         }
 
-        if(std::isdigit(peek)) {
-            int v = 0;
+        if(std::isdigit(peek) || peek == '.') {
+            std::ostringstream buffer;
+            bool fractional = (peek == '.');
+
             do {
-                v = 10 * v + (peek - '0');
+                buffer << peek;
                 peek = getchar();
+
+                if(peek == '.' && fractional == false) {
+                    buffer << peek;
+                    peek = getchar();
+                }
             } while (std::isdigit(peek)) ;
-            return Num(v);
+            return Num(std::stod(buffer.str()));
         }
         else if(std::isalpha(peek)) {
             std::ostringstream buffer;
