@@ -72,6 +72,28 @@ public:
             if(nextCharacter == '/') {
                 isMultilineComment = false;
             }
+        } else if(peek == '<') {
+            char nextCharacter = getchar();
+            if(nextCharacter == '=') {
+                return Token(Tag::LESS_OR_EQUAL);
+            }
+            return Token(Tag::LESS);
+        } else if(peek == '=') {
+            char nextCharacter = getchar();
+            if(nextCharacter == '=') {
+                return Token(Tag::EQUAL);
+            }
+        } else if(peek == '!') {
+            char nextCharacter = getchar();
+            if(nextCharacter == '=') {
+                return Token(Tag::NOT_EQUAL);
+            }
+        } else if(peek == '>') {
+            char nextCharacter = getchar();
+            if(nextCharacter == '=') {
+                return Token(Tag::GREATER_OR_EQUAL);
+            }
+            return Token(Tag::GREATER);
         }
 
 
