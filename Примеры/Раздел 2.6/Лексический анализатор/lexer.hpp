@@ -13,6 +13,8 @@
 
 class Lexer {
     char peek = ' ';
+    bool isComment = false;
+    bool isMultilineComment = false;
     std::unordered_map<std::string, Word> words;
 
     void reserve(Word t) {
@@ -28,10 +30,14 @@ public:
 
     Token scan() {
         for(; ; peek = getchar()) {
-            if(peek == ' ' || peek == '\t') continue;
-            else if(peek == '\n') line = line + 1;
+            if(isMultilineComment || isComment || peek == ' ' || peek == '\t') continue;
+            else if(peek == '\n') {
+                isComment = false;
+                line = line + 1;
+            }
             else break;
         }
+
         if(std::isdigit(peek)) {
             int v = 0;
             do {
@@ -40,7 +46,7 @@ public:
             } while (std::isdigit(peek)) ;
             return Num(v);
         }
-        if(std::isalpha(peek)) {
+        else if(std::isalpha(peek)) {
             std::ostringstream buffer;
             do {
                 buffer << peek;
@@ -53,6 +59,21 @@ public:
                 return w->second;
             }
         }
+        else if(peek == '/') {
+            char nextCharacter = getchar();
+            if(nextCharacter == '/') {
+                isComment = true;
+            } else if(nextCharacter == '*') {
+                isMultilineComment = true;
+            }
+        }
+        else if(peek == '*') {
+            char nextCharacter = getchar();
+            if(nextCharacter == '/') {
+                isMultilineComment = false;
+            }
+        }
+
 
         Token t = Token(peek);
         peek = ' ';
