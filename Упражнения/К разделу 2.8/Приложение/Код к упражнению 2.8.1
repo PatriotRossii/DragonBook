@@ -1,0 +1,14 @@
+class For extends Stmt {
+    Expr init, cond, post;
+    Stmt s;
+
+    public For(Expr init, Expr cond, Expr post, Stmt s) {
+        init = init; cond = cond; post = post; s = s;
+    }
+
+    public void gen() {
+        init.rvalue();
+        Stmt body = Stmt(s, post);
+        While(cond, body).gen();
+    }
+}
